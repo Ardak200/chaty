@@ -126,7 +126,7 @@ export async function getMe(req: Request, res: Response) {
     status: "success",
     data: {
       user: {
-        id: user.id,
+        id: user._id,
         username: user.username,
         email: user.email,
       },

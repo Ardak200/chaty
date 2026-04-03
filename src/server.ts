@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
@@ -11,8 +12,6 @@ import cookieParser from "cookie-parser";
 import { createServer } from "http";
 import { setupSocket } from "./socket";
 import { usersRouter } from "./routes/users";
-
-dotenv.config();
 
 const port = process.env.PORT;
 

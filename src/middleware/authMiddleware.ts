@@ -25,8 +25,6 @@ export async function authMiddleware(
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwt.JwtPayload;
 
-  console.log(decoded);
-
   const user = await User.findOne({ _id: decoded.id });
 
   if (!user) {
