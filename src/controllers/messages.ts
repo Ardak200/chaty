@@ -35,3 +35,15 @@ export async function getMessages(req: Request, res: Response) {
 
   res.json({ data: messages, meta: { page, limit } });
 }
+
+export async function readMessage(req: Request, _res: Response) {
+  const { messageIds } = req.body;
+
+  await Message.updateMany(
+    {
+      _id: { $in: messageIds },
+      sender: { $ne: req.user!._id },
+    },
+    { read: true },
+  );
+}
