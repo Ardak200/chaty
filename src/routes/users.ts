@@ -8,4 +8,9 @@ export const usersRouter = Router();
 usersRouter.use(authMiddleware);
 
 usersRouter.get("/", getUsers);
-usersRouter.put("/avatar", authMiddleware, upload.single("file"), uploadAvatar);
+usersRouter.put(
+  "/avatar",
+  authMiddleware,
+  upload.single("avatar"),
+  uploadAvatar,
+);
