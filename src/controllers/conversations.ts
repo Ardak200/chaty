@@ -7,10 +7,10 @@ export async function createDirectConversation(req: Request, res: Response) {
 
   const conversation = await Conversation.findOne({
     type: "direct",
-    participants: { $all: [req.user?.id, userId] },
+    participants: { $all: [req.user?._id, userId] },
   });
 
-  if (req.user?.id === userId) {
+  if (req.user?._id === userId) {
     throw new BadRequestError("You can't create a conversation with yourself");
   }
 
@@ -22,7 +22,7 @@ export async function createDirectConversation(req: Request, res: Response) {
 
   await Conversation.create({
     type: "direct",
-    participants: [req.user?.id, userId],
+    participants: [req.user?._id, userId],
   });
 
   res.status(201).json({
@@ -36,7 +36,7 @@ export async function createGroupConversation(req: Request, res: Response) {
 
   await Conversation.create({
     type: "group",
-    participants: [...participants, req.user?.id],
+    participants: [...participants, req.user?._id],
   });
 
   res.status(201).json({
@@ -47,7 +47,7 @@ export async function createGroupConversation(req: Request, res: Response) {
 
 export async function getAllUsersConversations(req: Request, res: Response) {
   const conversations = await Conversation.find({
-    participants: req.user!.id,
+    participants: req.user!._id,
   }).populate("participants", "username email");
 
   res.status(200).json({

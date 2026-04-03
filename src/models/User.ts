@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export interface IUser {
-  id: string;
+  _id: mongoose.Types.ObjectId;
   username: string;
   email: string;
   password: string;

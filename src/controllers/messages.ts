@@ -7,7 +7,7 @@ export async function sendMessage(req: Request, res: Response) {
 
   await Message.create({
     conversationId: req.params.conversationId as string,
-    sender: req.user!.id,
+    sender: req.user!._id,
     content,
   });
 

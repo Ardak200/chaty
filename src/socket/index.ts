@@ -41,11 +41,11 @@ export function setupSocket(httpServer: HttpServer) {
     console.log(`User connected: ${socket.data.user.username}`);
 
     const conversations = await Conversation.find({
-      participants: socket.data.user.id,
+      participants: socket.data.user._id,
     });
 
     for (const conversation of conversations) {
-      socket.join(conversation.id);
+      socket.join(conversation._id.toString());
     }
 
     socket.on(
@@ -54,7 +54,7 @@ export function setupSocket(httpServer: HttpServer) {
         try {
           const message = await Message.create({
             conversationId: data.conversationId,
-            sender: socket.data.user.id,
+            sender: socket.data.user._id,
             content: data.content,
           });
 
