@@ -36,7 +36,7 @@ export async function getMessages(req: Request, res: Response) {
   res.json({ data: messages, meta: { page, limit } });
 }
 
-export async function readMessage(req: Request, _res: Response) {
+export async function readMessages(req: Request, res: Response) {
   const { messageIds } = req.body;
 
   await Message.updateMany(
@@ -46,4 +46,6 @@ export async function readMessage(req: Request, _res: Response) {
     },
     { read: true },
   );
+
+  res.json({ message: "Messages are read" });
 }
