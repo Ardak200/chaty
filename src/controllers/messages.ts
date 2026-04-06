@@ -19,7 +19,7 @@ export async function sendMessage(req: Request, res: Response) {
 export async function editMessage(req: Request, res: Response) {
   const { newMessage } = req.body;
 
-  const messageId = req.params.messageId;
+  const messageId = req.params.id;
 
   const oldMessage = await Message.findById(messageId);
 
@@ -34,6 +34,14 @@ export async function editMessage(req: Request, res: Response) {
   await oldMessage.updateOne({ content: newMessage });
 
   res.json({ message: "Message updated successfully" });
+}
+
+export async function deleteMessage(req: Request, res: Response) {
+  const messageId = req.params.id;
+
+  await Message.findByIdAndDelete(messageId);
+
+  res.sendStatus(204);
 }
 
 export async function getMessages(req: Request, res: Response) {
