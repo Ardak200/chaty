@@ -5,6 +5,7 @@ interface IMessage {
   sender: mongoose.Types.ObjectId;
   content: string;
   read: boolean;
+  isEdited: boolean;
 }
 
 const messageSchema = new mongoose.Schema(
@@ -19,13 +20,17 @@ const messageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    content: {
+      type: String,
+      required: true,
+    },
     read: {
       type: Boolean,
       default: false,
     },
-    content: {
-      type: String,
-      required: true,
+    isEdited: {
+      type: Boolean,
+      default: false,
     },
   },
   {
