@@ -31,7 +31,7 @@ export async function editMessage(req: Request, res: Response) {
     throw new BadRequestError("Content is the same");
   }
 
-  await oldMessage.updateOne({ content: newMessage });
+  await oldMessage.updateOne({ content: newMessage, isEdited: true });
 
   res.json({ message: "Message updated successfully" });
 }
