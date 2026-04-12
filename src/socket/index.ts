@@ -48,6 +48,8 @@ export function setupSocket(httpServer: HttpServer) {
       socket.join(conversation._id.toString());
     }
 
+    socket.join(`user:${socket.data.user._id.toString()}`);
+
     socket.on(
       "sendMessage",
       async (data: { conversationId: string; content: string }) => {
@@ -69,6 +71,34 @@ export function setupSocket(httpServer: HttpServer) {
 
     socket.on("joinConversation", (conversationId: string) => {
       socket.join(conversationId);
+    });
+
+    socket.on("call:offer", (data: { to: string; offer: any }) => {
+      io.to(`user:${data.to}`).emit("call:offer", {
+        from: socket.data.user._id.toString(),
+        fromUsername: socket.data.user.username,
+        offer: data.offer,
+      });
+    });
+
+    socket.on("call:answer", (data: { to: string; answer: any }) => {
+      io.to(`user:${data.to}`).emit("call:answer", {
+        from: socket.data.user._id.toString(),
+        answer: data.answer,
+      });
+    });
+
+    socket.on("call:ice", (data: { to: string; candidate: any }) => {
+      io.to(`user:${data.to}`).emit("call:ice", {
+        from: socket.data.user._id.toString(),
+        candidate: data.candidate,
+      });
+    });
+
+    socket.on("call:end", (data: { to: string }) => {
+      io.to(`user:${data.to}`).emit("call:end", {
+        from: socket.data.user._id.toString(),
+      });
     });
 
     socket.on("disconnect", () => {
