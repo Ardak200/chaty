@@ -59,7 +59,8 @@ export async function getMessages(req: Request, res: Response) {
   })
     .sort({ createdAt: -1 })
     .skip((Number(page) - 1) * Number(limit))
-    .limit(Number(limit));
+    .limit(Number(limit))
+    .populate("sender", "username");
 
   res.json({ data: messages, meta: { page, limit } });
 }
