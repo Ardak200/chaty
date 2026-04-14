@@ -1,19 +1,31 @@
 import { Server } from "socket.io";
 import { Server as HttpServer } from "http";
 import jwt from "jsonwebtoken";
+import cookie from "cookie";
 import { User } from "../models/User";
 import { Conversation } from "../models/Conversation";
 import { Message } from "../models/Message";
 
 export function setupSocket(httpServer: HttpServer) {
+  const allowedOrigins = (
+    process.env.CLIENT_ORIGIN ?? "http://localhost:5173,http://localhost:5174"
+  )
+    .split(",")
+    .map((o) => o.trim());
+
   const io = new Server(httpServer, {
     cors: {
-      origin: "*",
+      origin: allowedOrigins,
+      credentials: true,
     },
   });
 
   io.use(async (socket, next) => {
-    const token = socket.handshake.auth.token || socket.handshake.query.token;
+    const cookies = cookie.parse(socket.handshake.headers.cookie || "");
+    const token =
+      socket.handshake.auth.token ||
+      socket.handshake.query.token ||
+      cookies.accessToken;
 
     if (!token) {
       return next(new Error("No token provided"));
