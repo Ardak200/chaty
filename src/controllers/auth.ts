@@ -67,7 +67,7 @@ export async function login(req: Request, res: Response) {
   });
 }
 
-export const refresh = async (req: Request, res: Response) => {
+export async function refresh(req: Request, res: Response) {
   const token = req.cookies?.refreshToken;
 
   if (!token) {
@@ -95,9 +95,9 @@ export const refresh = async (req: Request, res: Response) => {
     status: "success",
     data: { token: accessToken },
   });
-};
+}
 
-export const logout = async (req: Request, res: Response) => {
+export async function logout(req: Request, res: Response) {
   const token = req.cookies?.refreshToken;
 
   if (token) {
@@ -118,7 +118,7 @@ export const logout = async (req: Request, res: Response) => {
     status: "success",
     message: "Logged out successfully",
   });
-};
+}
 
 export async function getMe(req: Request, res: Response) {
   const user = req.user!;
