@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { User } from "../models/User";
-import { generateAccessToken } from "../utils/generateAccessToken";
-import { generateRefreshToken } from "../utils/generateRefreshToken";
-import { BadRequestError, UnauthorizedError } from "../utils/appError";
-import { RefreshToken } from "../models/RefreshToken";
+import { User } from "../models/User.js";
+import { generateAccessToken } from "../utils/generateAccessToken.js";
+import { generateRefreshToken } from "../utils/generateRefreshToken.js";
+import { BadRequestError, UnauthorizedError } from "../utils/appError.js";
+import { RefreshToken } from "../models/RefreshToken.js";
 
 export async function register(req: Request, res: Response) {
   const { username, email, password } = req.body;

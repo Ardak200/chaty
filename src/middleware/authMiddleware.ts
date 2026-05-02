@@ -1,7 +1,7 @@
 import { NextFunction, type Request, type Response } from "express";
-import { UnauthorizedError } from "../utils/appError";
+import { UnauthorizedError } from "../utils/appError.js";
 import jwt from "jsonwebtoken";
-import { User } from "../models/User";
+import { User } from "../models/User.js";
 
 export async function authMiddleware(
   req: Request,

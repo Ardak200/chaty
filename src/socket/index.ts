@@ -2,9 +2,9 @@ import { Server as HttpServer } from "http";
 import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
-import { User } from "../models/User";
-import { Conversation } from "../models/Conversation";
-import { Message } from "../models/Message";
+import { User } from "../models/User.js";
+import { Conversation } from "../models/Conversation.js";
+import { Message } from "../models/Message.js";
 
 export function setupSocket(httpServer: HttpServer) {
   const allowedOrigins = (

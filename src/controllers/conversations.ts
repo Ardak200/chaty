@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { Conversation } from "../models/Conversation";
-import { BadRequestError } from "../utils/appError";
+import { Conversation } from "../models/Conversation.js";
+import { BadRequestError } from "../utils/appError.js";
 
 export async function createDirectConversation(req: Request, res: Response) {
   const { userId } = req.body;

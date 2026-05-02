@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { User } from "../models/User";
-import { BadRequestError } from "../utils/appError";
+import { User } from "../models/User.js";
+import { BadRequestError } from "../utils/appError.js";
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { getS3 } from "../config/s3";
+import { getS3 } from "../config/s3.js";
 
 export async function getUsers(req: Request, res: Response) {
   const search = req.query.search as string | undefined;

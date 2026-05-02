@@ -3,15 +3,15 @@ configDotenv();
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import { connectDB } from "./config/db";
-import { authRouter } from "./routes/auth";
-import { errorHandler } from "./middleware/errorHandler";
-import { conversationsRouter } from "./routes/conversations";
-import { messagesRouter } from "./routes/messages";
+import { connectDB } from "./config/db.js";
+import { authRouter } from "./routes/auth.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+import { conversationsRouter } from "./routes/conversations.js";
+import { messagesRouter } from "./routes/messages.js";
 import cookieParser from "cookie-parser";
 import { createServer } from "http";
-import { setupSocket } from "./socket";
-import { usersRouter } from "./routes/users";
+import { setupSocket } from "./socket/index.js";
+import { usersRouter } from "./routes/users.js";
 
 const port = process.env.PORT;
 

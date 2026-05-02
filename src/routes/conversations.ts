@@ -3,8 +3,8 @@ import {
   createDirectConversation,
   createGroupConversation,
   getAllUsersConversations,
-} from "../controllers/conversations";
-import { authMiddleware } from "../middleware/authMiddleware";
+} from "../controllers/conversations.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 
 export const conversationsRouter = Router();
 

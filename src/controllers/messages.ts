@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { Message } from "../models/Message";
-import { BadRequestError, NotFoundError } from "../utils/appError";
+import { Message } from "../models/Message.js";
+import { BadRequestError, NotFoundError } from "../utils/appError.js";
 
 export async function sendMessage(req: Request, res: Response) {
   const { content } = req.body;

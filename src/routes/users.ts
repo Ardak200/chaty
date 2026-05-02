@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { authMiddleware } from "../middleware/authMiddleware";
-import { getUsers, uploadAvatar } from "../controllers/users";
-import { upload } from "../utils/upload";
+import { authMiddleware } from "../middleware/authMiddleware.js";
+import { getUsers, uploadAvatar } from "../controllers/users.js";
+import { upload } from "../utils/upload.js";
 
 export const usersRouter = Router();
 

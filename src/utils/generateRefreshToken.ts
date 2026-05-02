@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { Response } from "express";
-import { RefreshToken } from "../models/RefreshToken";
+import { RefreshToken } from "../models/RefreshToken.js";
 
 export async function generateRefreshToken(userId: string, res: Response) {
   const token = crypto.randomBytes(40).toString("hex");

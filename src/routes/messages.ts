@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { authMiddleware } from "../middleware/authMiddleware";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 import {
   deleteMessage,
   editMessage,
   getMessages,
   readMessages,
   sendMessage,
-} from "../controllers/messages";
+} from "../controllers/messages.js";
 
 export const messagesRouter = Router();
 
