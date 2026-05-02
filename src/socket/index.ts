@@ -7,15 +7,12 @@ import { Conversation } from "../models/Conversation.js";
 import { Message } from "../models/Message.js";
 
 export function setupSocket(httpServer: HttpServer) {
-  const allowedOrigins = (
-    process.env.CLIENT_ORIGIN ?? "http://localhost:5173,http://localhost:5174"
-  )
-    .split(",")
-    .map((o) => o.trim());
-
   const io = new Server(httpServer, {
     cors: {
-      origin: allowedOrigins,
+      origin: (origin, callback) => {
+        // Allow all origins
+        callback(null, true);
+      },
       credentials: true,
     },
   });
