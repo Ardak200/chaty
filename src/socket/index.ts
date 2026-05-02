@@ -1,5 +1,5 @@
-import { Server } from "socket.io";
 import { Server as HttpServer } from "http";
+import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import { User } from "../models/User";
@@ -22,45 +22,47 @@ export function setupSocket(httpServer: HttpServer) {
 
   io.use(async (socket, next) => {
     const cookies = cookie.parse(socket.handshake.headers.cookie || "");
+
     const token =
       socket.handshake.auth.token ||
       socket.handshake.query.token ||
       cookies.accessToken;
 
-    if (!token) {
-      return next(new Error("No token provided"));
-    }
+    if (!token) return next(new Error("No token provided"));
 
     try {
       const decoded = jwt.verify(
         token,
         process.env.JWT_SECRET!,
       ) as jwt.JwtPayload;
+
       const user = await User.findById(decoded.id);
 
-      if (!user) {
-        return next(new Error("User not found"));
-      }
+      if (!user) return next(new Error("User not found"));
 
       socket.data.user = user;
       next();
-    } catch {
+    } catch (error) {
       next(new Error("Invalid token"));
     }
   });
 
   io.on("connection", async (socket) => {
-    console.log(`User connected: ${socket.data.user.username}`);
+    console.log("User connected:", socket.data.user.username);
 
     const conversations = await Conversation.find({
       participants: socket.data.user._id,
     });
 
-    for (const conversation of conversations) {
-      socket.join(conversation._id.toString());
+    for (const conv of conversations) {
+      socket.join(conv._id.toString());
     }
 
-    socket.join(`user:${socket.data.user._id.toString()}`);
+    socket.join("user:" + socket.data.user._id.toString());
+
+    socket.on("joinConversation", (conversationId: string) => {
+      socket.join(conversationId);
+    });
 
     socket.on(
       "sendMessage",
@@ -73,17 +75,12 @@ export function setupSocket(httpServer: HttpServer) {
           });
 
           const populated = await message.populate("sender", "username");
-
           io.to(data.conversationId).emit("newMessage", populated);
-        } catch (err) {
-          console.error("sendMessage error:", err);
+        } catch (error) {
+          console.error("sendMessage error:", error);
         }
       },
     );
-
-    socket.on("joinConversation", (conversationId: string) => {
-      socket.join(conversationId);
-    });
 
     socket.on("call:offer", (data: { to: string; offer: any }) => {
       io.to(`user:${data.to}`).emit("call:offer", {
