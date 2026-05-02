@@ -9,7 +9,7 @@ import { Message } from "../models/Message.js";
 export function setupSocket(httpServer: HttpServer) {
   const io = new Server(httpServer, {
     cors: {
-      origin: (origin, callback) => {
+      origin: (_origin, callback) => {
         // Allow all origins
         callback(null, true);
       },
