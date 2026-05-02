@@ -8,9 +8,9 @@ export function generateAccessToken(userId: string, res: Response) {
 
   res.cookie("accessToken", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 1000 * 60 * 1,
+    secure: true,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 15,
   });
 
   return token;
