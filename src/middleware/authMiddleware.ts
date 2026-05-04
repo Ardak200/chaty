@@ -23,7 +23,21 @@ export async function authMiddleware(
     throw new UnauthorizedError("Not authorized, no token provided");
   }
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwt.JwtPayload;
+  let decoded: jwt.JwtPayload;
+
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwt.JwtPayload;
+  } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      throw new UnauthorizedError("Access token expired");
+    }
+
+    if (err instanceof jwt.JsonWebTokenError) {
+      throw new UnauthorizedError("Invalid token");
+    }
+
+    throw err;
+  }
 
   const user = await User.findOne({ _id: decoded.id });
 
