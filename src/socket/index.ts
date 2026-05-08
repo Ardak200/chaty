@@ -20,10 +20,7 @@ export function setupSocket(httpServer: HttpServer) {
   io.use(async (socket, next) => {
     const cookies = cookie.parse(socket.handshake.headers.cookie || "");
 
-    const token =
-      socket.handshake.auth.token ||
-      socket.handshake.query.token ||
-      cookies.accessToken;
+    const token = cookies.accessToken;
 
     if (!token) return next(new Error("No token provided"));
 
