@@ -35,6 +35,12 @@ const messageSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    toJSON: {
+      transform: (_doc, ret: Record<string, unknown>) => {
+        delete ret.__v;
+        return ret;
+      },
+    },
   },
 );
 

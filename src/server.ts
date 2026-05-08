@@ -12,6 +12,8 @@ import cookieParser from "cookie-parser";
 import { createServer } from "http";
 import { setupSocket } from "./socket/index.js";
 import { usersRouter } from "./routes/users.js";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./config/swagger.js";
 
 const port = process.env.PORT;
 
@@ -28,6 +30,11 @@ server.use(
 server.use(express.json());
 server.use(morgan("dev"));
 server.use(cookieParser());
+
+server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+server.get("/api-docs.json", (_req, res) => {
+  res.json(swaggerSpec);
+});
 
 server.use("/auth", authRouter);
 server.use("/conversations", conversationsRouter);

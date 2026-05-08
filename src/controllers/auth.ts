@@ -30,6 +30,7 @@ export async function register(req: Request, res: Response) {
         id: user.id,
         username: user.username,
         email: user.email,
+        avatar: user.avatar,
       },
       token: accessToken,
     },
@@ -39,7 +40,7 @@ export async function register(req: Request, res: Response) {
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
     return res.status(404).json({ error: "Invalid email or password" });
@@ -61,6 +62,7 @@ export async function login(req: Request, res: Response) {
         id: user.id,
         email: user.email,
         username: user.username,
+        avatar: user.avatar,
       },
       token: accessToken,
     },
@@ -130,6 +132,7 @@ export async function getMe(req: Request, res: Response) {
         id: user._id,
         username: user.username,
         email: user.email,
+        avatar: user.avatar,
       },
     },
   });

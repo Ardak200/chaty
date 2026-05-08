@@ -48,7 +48,7 @@ export async function createGroupConversation(req: Request, res: Response) {
 export async function getAllUsersConversations(req: Request, res: Response) {
   const conversations = await Conversation.find({
     participants: req.user!._id,
-  }).populate("participants", "username email");
+  }).populate("participants", "username email avatar");
 
   res.status(200).json({
     conversations,

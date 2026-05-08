@@ -29,7 +29,15 @@ const conversationSchema = new mongoose.Schema(
       type: String,
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: {
+      transform: (_doc, ret: Record<string, unknown>) => {
+        delete ret.__v;
+        return ret;
+      },
+    },
+  },
 );
 
 export const Conversation = mongoose.model<IConversation>(

@@ -68,7 +68,7 @@ export function setupSocket(httpServer: HttpServer) {
             content: data.content,
           });
 
-          const populated = await message.populate("sender", "username");
+          const populated = await message.populate("sender", "username avatar");
           io.to(data.conversationId).emit("newMessage", populated);
         } catch (error) {
           console.error("sendMessage error:", error);
