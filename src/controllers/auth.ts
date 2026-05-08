@@ -104,15 +104,16 @@ export async function logout(req: Request, res: Response) {
     await RefreshToken.deleteMany({ token });
   }
 
-  res.cookie("accessToken", "", {
+  const isProd = process.env.NODE_ENV === "production";
+  const cookieOpts = {
     httpOnly: true,
-    expires: new Date(0),
-  });
+    secure: isProd,
+    sameSite: isProd ? ("none" as const) : ("lax" as const),
+    path: "/",
+  };
 
-  res.cookie("refreshToken", "", {
-    httpOnly: true,
-    expires: new Date(0),
-  });
+  res.clearCookie("accessToken", cookieOpts);
+  res.clearCookie("refreshToken", cookieOpts);
 
   res.status(200).json({
     status: "success",
