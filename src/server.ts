@@ -31,6 +31,10 @@ server.use(express.json());
 server.use(morgan("dev"));
 server.use(cookieParser());
 
+server.get("/", (_req, res) => {
+  res.json({ message: "Server is up and running" });
+});
+
 server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 server.get("/api-docs.json", (_req, res) => {
   res.json(swaggerSpec);
