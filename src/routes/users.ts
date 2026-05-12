@@ -1,6 +1,10 @@
 import { Router } from "express";
 import { authMiddleware } from "../middleware/authMiddleware.js";
-import { getUsers, uploadAvatar } from "../controllers/users.js";
+import {
+  getUsers,
+  registerPushToken,
+  uploadAvatar,
+} from "../controllers/users.js";
 import { upload } from "../utils/upload.js";
 
 export const usersRouter = Router();
@@ -97,3 +101,43 @@ usersRouter.put(
   upload.single("avatar"),
   uploadAvatar,
 );
+
+/**
+ * @openapi
+ * /users/me/push-tokens:
+ *   post:
+ *     tags: [Users]
+ *     summary: Register an Expo push token for the current device
+ *     description: |
+ *       Stores or refreshes a push notification token for the authenticated
+ *       user. The same token registered on a different account is moved
+ *       automatically.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [token, platform]
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
+ *               platform:
+ *                 type: string
+ *                 enum: [ios, android]
+ *     responses:
+ *       204:
+ *         description: Token stored
+ *       400:
+ *         description: Missing or invalid token/platform
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
+ *       401:
+ *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
+ */
+usersRouter.post("/me/push-tokens", registerPushToken);

@@ -162,3 +162,16 @@ socket.on("call:end", (data: { from: string }) => { /* ... */ });
 
 - `connect` — fired once the handshake and JWT verification succeed.
 - `disconnect` — fired when the client goes away. The server logs the username; no broadcast is emitted to other users.
+
+---
+
+## Push notifications
+
+When a `sendMessage` is emitted and a participant has no active socket, the server sends an Expo push to every token the recipient has registered (`channelId: "messages"`, payload `{ type: "message", conversationId, messageId }`).
+
+When a `call:offer` targets an offline user, the server:
+1. Stores the offer in memory for 30 seconds (`pendingCallOffers`).
+2. Sends an Expo push with `channelId: "calls"`, `priority: "high"` and payload `{ type: "call", callerId }`.
+3. Re-emits the stored `call:offer` to the recipient's first socket as soon as they reconnect, then clears the pending entry. A `call:end` from the caller also clears it.
+
+Clients register their push token via `POST /users/me/push-tokens` with `{ token, platform }`. Tokens that come back as `DeviceNotRegistered` from Expo are pruned automatically.

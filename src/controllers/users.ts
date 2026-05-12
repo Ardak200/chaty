@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { User } from "../models/User.js";
+import { User, type PushPlatform } from "../models/User.js";
 import { BadRequestError } from "../utils/appError.js";
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getS3 } from "../config/s3.js";
@@ -18,6 +18,38 @@ export async function getUsers(req: Request, res: Response) {
     .limit(Number(limit));
 
   res.json({ data: users, meta: { page, limit } });
+}
+
+export async function registerPushToken(req: Request, res: Response) {
+  const { token, platform } = req.body as {
+    token?: string;
+    platform?: string;
+  };
+
+  if (!token || typeof token !== "string") {
+    throw new BadRequestError("token is required");
+  }
+  if (platform !== "ios" && platform !== "android") {
+    throw new BadRequestError("platform must be 'ios' or 'android'");
+  }
+
+  const userId = req.user!._id;
+
+  await User.updateMany(
+    { "pushTokens.token": token },
+    { $pull: { pushTokens: { token } } },
+  );
+
+  await User.updateOne(
+    { _id: userId },
+    {
+      $push: {
+        pushTokens: { token, platform: platform as PushPlatform },
+      },
+    },
+  );
+
+  res.status(204).end();
 }
 
 export async function uploadAvatar(req: Request, res: Response) {
