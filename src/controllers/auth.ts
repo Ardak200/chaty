@@ -9,10 +9,13 @@ import { RefreshToken } from "../models/RefreshToken.js";
 export async function register(req: Request, res: Response) {
   const { username, email, password } = req.body;
 
-  const userExists = await User.findOne({ email });
+  const existing = await User.findOne({ $or: [{ email }, { username }] });
 
-  if (userExists) {
-    throw new BadRequestError("User with this email already exists");
+  if (existing) {
+    if (existing.email === email) {
+      throw new BadRequestError("User with this email already exists");
+    }
+    throw new BadRequestError("Username is already taken");
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -38,18 +41,24 @@ export async function register(req: Request, res: Response) {
 }
 
 export async function login(req: Request, res: Response) {
-  const { email, password } = req.body;
+  const { identifier, password } = req.body;
 
-  const user = await User.findOne({ email }).select("+password");
+  if (!identifier || !password) {
+    throw new BadRequestError("identifier and password are required");
+  }
+
+  const user = await User.findOne({
+    $or: [{ email: identifier }, { username: identifier }],
+  }).select("+password");
 
   if (!user) {
-    return res.status(404).json({ error: "Invalid email or password" });
+    return res.status(404).json({ error: "Invalid credentials" });
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid) {
-    return res.status(401).json({ error: "Invalid email or password" });
+    return res.status(401).json({ error: "Invalid credentials" });
   }
 
   const accessToken = generateAccessToken(user.id, res);

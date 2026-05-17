@@ -34,7 +34,7 @@ export const authRouter = express.Router();
  *           application/json:
  *             schema: { $ref: '#/components/schemas/AuthSuccess' }
  *       400:
- *         description: Email already in use
+ *         description: Email or username already in use
  *         content:
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
@@ -46,10 +46,11 @@ authRouter.post("/register", register);
  * /auth/login:
  *   post:
  *     tags: [Auth]
- *     summary: Log in with email and password
+ *     summary: Log in with username or email
  *     description: |
- *       Returns the access token in the response body and sets `accessToken`
- *       and `refreshToken` HTTP-only cookies.
+ *       Accepts a username or email as `identifier`. Returns the access token
+ *       in the response body and sets `accessToken` and `refreshToken`
+ *       HTTP-only cookies.
  *     security: []
  *     requestBody:
  *       required: true
@@ -57,9 +58,12 @@ authRouter.post("/register", register);
  *         application/json:
  *           schema:
  *             type: object
- *             required: [email, password]
+ *             required: [identifier, password]
  *             properties:
- *               email: { type: string, format: email }
+ *               identifier:
+ *                 type: string
+ *                 description: Username or email
+ *                 example: alice
  *               password: { type: string, format: password }
  *     responses:
  *       201:
@@ -67,14 +71,19 @@ authRouter.post("/register", register);
  *         content:
  *           application/json:
  *             schema: { $ref: '#/components/schemas/AuthSuccess' }
+ *       400:
+ *         description: Missing identifier or password
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
  *       401:
- *         description: Invalid email or password
+ *         description: Invalid credentials
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 error: { type: string, example: Invalid email or password }
+ *                 error: { type: string, example: Invalid credentials }
  *       404:
  *         description: User not found
  *         content:
@@ -82,7 +91,7 @@ authRouter.post("/register", register);
  *             schema:
  *               type: object
  *               properties:
- *                 error: { type: string, example: Invalid email or password }
+ *                 error: { type: string, example: Invalid credentials }
  */
 authRouter.post("/login", login);
 
